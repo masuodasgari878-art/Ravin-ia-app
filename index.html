@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#0b1f1a" />
+  <title>RAVIN AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #071410;
+      --card: #10221c;
+      --card2: #163028;
+      --line: #234338;
+      --text: #e8f6ef;
+      --muted: #8fb3a4;
+      --accent: #3dd68c;
+      --accent2: #7cf0b4;
+      --warn: #ffb86b;
+      --danger: #ff7b7b;
+      --blue: #6ec8ff;
+      --purple: #c9a6ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: Vazirmatn, system-ui, sans-serif;
+      background: radial-gradient(1200px 600px at 80% -10%, #14362c 0%, var(--bg) 45%);
+      color: var(--text);
+      overflow: hidden;
+    }
+    #phone {
+      max-width: 430px;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    header.appbar {
+      padding: 18px 18px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 12px;
+      background: linear-gradient(135deg, #3dd68c, #1e8f5f);
+      display: grid; place-items: center; font-weight: 800; color: #042016;
+    }
+    .brand h1 { font-size: 16px; letter-spacing: .3px; }
+    .brand small { color: var(--muted); font-size: 11px; display: block; }
+    .chip {
+      background: var(--card); border: 1px solid var(--line);
+      padding: 6px 10px; border-radius: 999px; font-size: 12px; color: var(--muted);
+    }
+    main { flex: 1; overflow: auto; padding: 8px 16px 96px; }
+    .screen { display: none; animation: in .25s ease; }
+    .screen.active { display: block; }
+    @keyframes in { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+    .card {
+      background: linear-gradient(180deg, var(--card), #0d1c17);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .row { display: flex; gap: 10px; }
+    .row > * { flex: 1; }
+    h2 { font-size: 20px; margin-bottom: 6px; }
+    h3 { font-size: 15px; margin-bottom: 8px; }
+    p.muted { color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .ring-wrap { display: flex; align-items: center; gap: 16px; }
+    .ring {
+      width: 108px; height: 108px; border-radius: 50%;
+      background: conic-gradient(var(--accent) calc(var(--p) * 1%), #1b332b 0);
+      display: grid; place-items: center; position: relative;
+    }
+    .ring::after {
+      content: ""; position: absolute; inset: 10px; background: #0c1b16; border-radius: 50%;
+    }
+    .ring span { position: relative; z-index: 1; font-weight: 800; font-size: 18px; }
+    .macros { display: grid; gap: 8px; }
+    .bar { height: 8px; background: #1b332b; border-radius: 99px; overflow: hidden; }
+    .bar i { display: block; height: 100%; border-radius: 99px; }
+    .stat { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+    .meal {
+      display: flex; align-items: center; gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid #1b332b;
+    }
+    .meal:last-child { border-bottom: 0; padding-bottom: 0; }
+    .ico {
+      width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center;
+      background: var(--card2); font-size: 20px;
+    }
+    .meal b { display: block; font-size: 14px; }
+    .meal span { color: var(--muted); font-size: 12px; }
+    .kcal { color: var(--accent2); font-size: 13px; font-weight: 700; }
+    nav.tabbar {
+      position: absolute; bottom: 12px; left: 12px; right: 12px;
+      background: rgba(16,34,28,.92); backdrop-filter: blur(12px);
+      border: 1px solid var(--line); border-radius: 22px;
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      padding: 8px 6px; z-index: 20;
+    }
+    nav.tabbar button {
+      background: none; border: 0; color: var(--muted); font-family: inherit;
+      font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 6px 0; cursor: pointer;
+    }
+    nav.tabbar button.on { color: var(--accent2); }
+    nav.tabbar button .ic { font-size: 18px; }
+    button.btn {
+      width: 100%; border: 0; border-radius: 14px; padding: 13px;
+      background: linear-gradient(135deg, #3dd68c, #1ea368);
+      color: #042016; font-weight: 800; font-family: inherit; cursor: pointer; font-size: 15px;
+    }
+    button.btn.ghost {
+      background: transparent; color: var(--text); border: 1px solid var(--line);
+    }
+    input, select, textarea {
+      width: 100%; background: #0c1b16; border: 1px solid var(--line); color: var(--text);
+      border-radius: 12px; padding: 12px; font-family: inherit; font-size: 14px; margin: 6px 0 12px;
+    }
+    label { font-size: 13px; color: var(--muted); }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 14px; }
+    .pills button {
+      border: 1px solid var(--line); background: #0c1b16; color: var(--text);
+      border-radius: 999px; padding: 7px 12px; font-family: inherit; cursor: pointer; font-size: 12px;
+    }
+    .pills button.on { background: #1d4a38; border-color: var(--accent); color: var(--accent2); }
+    .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .day {
+      text-align: center; background: #0c1b16; border: 1px solid var(--line);
+      border-radius: 12px; padding: 8px 0; font-size: 11px; cursor: pointer;
+    }
+    .day.on { background: #1d4a38; border-color: var(--accent); }
+    .food-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1b332b; }
+    .chat { display: flex; flex-direction: column; gap: 10px; }
+    .bubble { max-width: 86%; padding: 10px 12px; border-radius: 16px; font-size: 13px; line-height: 1.7; }
+    .bot { background: #163028; align-self: start; }
+    .me { background: #1d4a38; align-self: end; }
+    .hidden { display: none !important; }
+    .overlay {
+      position: absolute; inset: 0; background: var(--bg); z-index: 30; overflow: auto; padding: 24px 18px 40px;
+    }
+    .progress-num { font-size: 28px; font-weight: 800; }
+    .tiny { font-size: 11px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div id="phone">
+    <div id="onboarding" class="overlay">
+      <div class="brand" style="margin-bottom:18px">
+        <div class="logo">R</div>
+        <div><h1>RAVIN AI</h1><small>مربی تغذیه هوشمند</small></div>
+      </div>
+      <div id="ob-step"></div>
+    </div>
+
+    <header class="appbar">
+      <div class="brand">
+        <div class="logo">R</div>
+        <div><h1>RAVIN AI</h1><small id="hello">سلام</small></div>
+      </div>
+      <div class="chip" id="goalChip">هدف</div>
+    </header>
+
+    <main>
+      <section id="dashboard" class="screen active"></section>
+      <section id="daily-plan" class="screen"></section>
+      <section id="weekly-plan" class="screen"></section>
+      <section id="food-log" class="screen"></section>
+      <section id="progress" class="screen"></section>
+      <section id="ai-coach" class="screen"></section>
+      <section id="profile" class="screen"></section>
+    </main>
+
+    <nav class="tabbar">
+      <button data-go="dashboard" class="on"><span class="ic">⌂</span>خانه</button>
+      <button data-go="daily-plan"><span class="ic">☰</span>برنامه</button>
+      <button data-go="food-log"><span class="ic">＋</span>ثبت غذا</button>
+      <button data-go="progress"><span class="ic">↗</span>پیشرفت</button>
+      <button data-go="ai-coach"><span class="ic">✦</span>مربی</button>
+    </nav>
+  </div>
+
+<script>
+const API = "";
+let apiOn = false;
+async function api(path, opts){
+  const r = await fetch(API + path, Object.assign({headers:{"Content-Type":"application/json"}}, opts||{}));
+  if(!r.ok) throw new Error("api");
+  return r.json();
+}
+(async()=>{ try{ await api("/api/health"); apiOn=true; }catch(e){ apiOn=false; } })();
+
+const FOODS = [
+  {id:'oats', name:'جو دوسر با شیر', kcal:320, p:14, c:48, f:8, meal:'صبحانه'},
+  {id:'egg', name:'املت ۲ تخم‌مرغ', kcal:180, p:13, c:2, f:13, meal:'صبحانه'},
+  {id:'yogurt', name:'ماست یونانی', kcal:130, p:17, c:6, f:4, meal:'میان‌وعده'},
+  {id:'chicken', name:'سینه مرغ کبابی', kcal:280, p:42, c:0, f:8, meal:'ناهار'},
+  {id:'rice', name:'برنج قهوه‌ای', kcal:220, p:5, c:46, f:2, meal:'ناهار'},
+  {id:'salad', name:'سالاد سبزیجات', kcal:90, p:3, c:12, f:3, meal:'ناهار'},
+  {id:'apple', name:'سیب', kcal:80, p:0, c:21, f:0, meal:'میان‌وعده'},
+  {id:'fish', name:'ماهی سالمون', kcal:310, p:34, c:0, f:18, meal:'شام'},
+  {id:'veg', name:'سبزی بخارپز', kcal:70, p:3, c:12, f:1, meal:'شام'},
+  {id:'nuts', name:'مخلوط آجیل (۳۰گ)', kcal:180, p:6, c:6, f:16, meal:'میان‌وعده'},
+];
+
+const state = JSON.parse(localStorage.getItem('ravin') || 'null') || {
+  user: null,
+  logs: [],
+  weights: [],
+  chat: [],
+  day: new Date().toISOString().slice(0,10)
+};
+
+function save(){ localStorage.setItem('ravin', JSON.stringify(state)); }
+
+function bmr(u){
+  const s = u.sex === 'زن' ? -161 : 5;
+  return Math.round(10*u.weight + 6.25*u.height - 5*u.age + s);
+}
+function tdee(u){
+  const m = {کم:1.2, متوسط:1.55, زیاد:1.75}[u.activity] || 1.4;
+  let t = bmr(u)*m;
+  if(u.goal==='کاهش وزن') t -= 400;
+  if(u.goal==='افزایش وزن') t += 300;
+  return Math.round(t);
+}
+function macros(kcal){
+  return {p: Math.round(kcal*0.3/4), c: Math.round(kcal*0.4/4), f: Math.round(kcal*0.3/9), kcal};
+}
+
+function buildPlan(){
+  const meals = {
+    'صبحانه': FOODS.filter(f=>f.meal==='صبحانه').slice(0,2),
+    'میان‌وعده': [FOODS.find(f=>f.id==='yogurt'), FOODS.find(f=>f.id==='apple')],
+    'ناهار': [FOODS.find(f=>f.id==='chicken'), FOODS.find(f=>f.id==='rice'), FOODS.find(f=>f.id==='salad')],
+    'شام': [FOODS.find(f=>f.id==='fish'), FOODS.find(f=>f.id==='veg')],
+  };
+  return meals;
+}
+
+function todayLogs(){ return state.logs.filter(l => l.date === state.day); }
+function eaten(){
+  return todayLogs().reduce((a,l)=>({
+    kcal:a.kcal+l.kcal, p:a.p+l.p, c:a.c+l.c, f:a.f+l.f
+  }), {kcal:0,p:0,c:0,f:0});
+}
+
+/* Onboarding */
+const ob = {step:0, data:{name:'', age:28, sex:'زن', height:165, weight:68, activity:'متوسط', goal:'کاهش وزن'}};
+function renderOnboarding(){
+  const box = document.getElementById('onboarding');
+  if(state.user){ box.classList.add('hidden'); renderAll(); return; }
+  const steps = [
+    `<h2>سلام، من راوین هستم</h2><p class="muted">برای ساخت برنامه شخصی چند سوال کوتاه می‌پرسم.</p>
+     <label>اسمت چیه؟</label><input id="ob-name" value="${ob.data.name}" placeholder="مثلاً سارا" />
+     <button class="btn" onclick="obNext()">ادامه</button>`,
+    `<h2>مشخصات بدنی</h2>
+     <label>سن</label><input type="number" id="ob-age" value="${ob.data.age}" />
+     <label>قد (سانتی‌متر)</label><input type="number" id="ob-height" value="${ob.data.height}" />
+     <label>وزن (کیلوگرم)</label><input type="number" id="ob-weight" value="${ob.data.weight}" />
+     <label>جنسیت</label>
+     <div class="pills" id="sexes"><button data-v="زن">زن</button><button data-v="مرد">مرد</button></div>
+     <button class="btn" onclick="obNext()">ادامه</button>`,
+    `<h2>هدف و فعالیت</h2>
+     <label>هدف</label>
+     <div class="pills" id="goals"><button data-v="کاهش وزن">کاهش وزن</button><button data-v="حفظ وزن">حفظ وزن</button><button data-v="افزایش وزن">افزایش وزن</button></div>
+     <label>سطح فعالیت</label>
+     <div class="pills" id="acts"><button data-v="کم">کم</button><button data-v="متوسط">متوسط</button><button data-v="زیاد">زیاد</button></div>
+     <button class="btn" onclick="obFinish()">ساخت برنامه</button>`
+  ];
+  document.getElementById('ob-step').innerHTML = steps[ob.step];
+  bindPills('sexes','sex'); bindPills('goals','goal'); bindPills('acts','activity');
+}
+function bindPills(id, key){
+  const el = document.getElementById(id); if(!el) return;
+  [...el.children].forEach(b=>{
+    if(b.dataset.v===ob.data[key]) b.classList.add('on');
+    b.onclick=()=>{ ob.data[key]=b.dataset.v; [...el.children].forEach(x=>x.classList.remove('on')); b.classList.add('on'); };
+  });
+}
+function obNext(){
+  if(ob.step===0) ob.data.name = document.getElementById('ob-name').value || 'کاربر';
+  if(ob.step===1){
+    ob.data.age=+document.getElementById('ob-age').value;
+    ob.data.height=+document.getElementById('ob-height').value;
+    ob.data.weight=+document.getElementById('ob-weight').value;
+  }
+  ob.step++; renderOnboarding();
+}
+async function obFinish(){
+  state.user = {...ob.data};
+  state.weights = [{date:state.day, kg:ob.data.weight}];
+  state.chat = [{from:'bot', text:`سلام ${ob.data.name}! هدف امروزت ${ob.data.goal} است. برنامه را بر اساس کالری هدف ساختم. هر سوالی داشتی بپرس.`}];
+  if(apiOn){
+    try{
+      const res = await api("/api/auth/onboard", {method:"POST", body:JSON.stringify(ob.data)});
+      state.user = res.user;
+      state.targets = res.targets;
+    }catch(e){}
+  }
+  save(); renderOnboarding();
+}
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.go===id));
+  if(id==='weekly-plan') renderWeekly();
+}
+
+function renderAll(){
+  const u = state.user;
+  document.getElementById('hello').textContent = 'سلام ' + u.name;
+  document.getElementById('goalChip').textContent = u.goal;
+  renderDashboard(); renderDaily(); renderWeekly(); renderFood(); renderProgress(); renderCoach(); renderProfile();
+}
+
+function renderDashboard(){
+  const u=state.user, t=macros(tdee(u)), e=eaten(), p=Math.min(100, Math.round(e.kcal/t.kcal*100));
+  document.getElementById('dashboard').innerHTML = `
+    <div class="card">
+      <div class="ring-wrap">
+        <div class="ring" style="--p:${p}"><span>${t.kcal-e.kcal}</span></div>
+        <div>
+          <h3>کالری باقی‌مانده</h3>
+          <p class="muted">هدف ${t.kcal} · خورده‌شده ${e.kcal}</p>
+          <div class="tiny">BMR ${bmr(u)} · TDEE ${tdee(u)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>درشت‌مغذی‌ها</h3>
+      ${macroRow('پروتئین', e.p, t.p, '#6ec8ff')}
+      ${macroRow('کربوهیدرات', e.c, t.c, '#3dd68c')}
+      ${macroRow('چربی', e.f, t.f, '#ffb86b')}
+    </div>
+    <div class="card">
+      <h3>میانبرها</h3>
+      <div class="row">
+        <button class="btn" onclick="go('food-log')">ثبت غذا</button>
+        <button class="btn ghost" onclick="go('ai-coach')">حرف با مربی</button>
+      </div>
+    </div>`;
+}
+function macroRow(n,a,b,c){
+  const w=Math.min(100, Math.round(a/b*100));
+  return `<div class="stat"><span>${n}</span><span>${a}/${b}گ</span></div><div class="bar"><i style="width:${w}%;background:${c}"></i></div>`;
+}
+
+function renderDaily(){
+  const plan=buildPlan();
+  let html='<h2>برنامه امروز</h2><p class="muted">پیشنهاد راوین بر اساس هدف شما</p>';
+  for(const [meal, items] of Object.entries(plan)){
+    html += `<div class="card"><h3>${meal}</h3>` + items.map(f=>`
+      <div class="meal">
+        <div class="ico">🍽</div>
+        <div style="flex:1"><b>${f.name}</b><span>${f.p}پ · ${f.c}ک · ${f.f}چ</span></div>
+        <div class="kcal">${f.kcal}</div>
+      </div>`).join('') + `<button class="btn ghost" onclick='addMeal(${JSON.stringify(items)})'>افزودن به لاگ</button></div>`;
+  }
+  html += `<p class="tiny" style="text-align:center;margin-top:8px"><a href="#" onclick="go('weekly-plan');return false" style="color:var(--accent2)">مشاهده برنامه هفتگی</a></p>`;
+  document.getElementById('daily-plan').innerHTML=html;
+}
+
+async function addMeal(items){
+  items.forEach(f=>state.logs.push({...f, date:state.day, time:Date.now()}));
+  if(apiOn && state.user?.id){
+    for(const f of items){
+      try{ await api("/api/logs", {method:"POST", body:JSON.stringify({user_id:state.user.id, food_id:f.id, portion:1})}); }catch(e){}
+    }
+  }
+  save(); renderAll(); go('dashboard');
+}
+
+function renderWeekly(){
+  const days=['ش','ی','د','س','چ','پ','ج'];
+  const today=new Date().getDay();
+  const map=[1,2,3,4,5,6,0];
+  document.getElementById('weekly-plan').innerHTML = `
+    <h2>برنامه هفتگی</h2>
+    <div class="week" style="margin:12px 0">
+      ${days.map((d,i)=>`<div class="day ${map[i]===today?'on':''}">${d}</div>`).join('')}
+    </div>
+    <div class="card"><p class="muted">الگوی هفته: ۳ روز پروتئین بالا، ۲ روز متعادل، ۲ روز ریکاوری کربوهیدرات. کالری هدف روزانه حدود ${tdee(state.user)} است و وعده‌ها بین صبحانه، ناهار، شام و میان‌وعده پخش می‌شود.</p></div>
+    <div class="card">
+      <h3>تمرکز این هفته</h3>
+      <div class="meal"><div class="ico">💪</div><div><b>پروتئین در هر وعده</b><span>حداقل ۲۵ گرم</span></div></div>
+      <div class="meal"><div class="ico">💧</div><div><b>آب</b><span>۸ لیوان در روز</span></div></div>
+      <div class="meal"><div class="ico">🌙</div><div><b>شام سبک‌تر</b><span>۳ ساعت قبل خواب</span></div></div>
+    </div>`;
+}
+
+function renderFood(){
+  const list = FOODS.map(f=>`
+    <div class="food-item">
+      <div><b>${f.name}</b><div class="tiny">${f.kcal} کالری · ${f.meal}</div></div>
+      <button class="btn" style="width:auto;padding:8px 12px" onclick='addMeal([${JSON.stringify(f)}])'>＋</button>
+    </div>`).join('');
+  const logs = todayLogs().map(f=>`<div class="food-item"><span>${f.name}</span><span class="kcal">${f.kcal}</span></div>`).join('') || '<p class="muted">هنوز چیزی ثبت نشده</p>';
+  document.getElementById('food-log').innerHTML = `
+    <h2>ثبت غذا</h2>
+    <input placeholder="جستجوی غذا..." oninput="filterFood(this.value)" />
+    <div class="card" id="foods">${list}</div>
+    <div class="card"><h3>لاگ امروز</h3>${logs}</div>`;
+}
+function filterFood(q){
+  document.getElementById('foods').innerHTML = FOODS.filter(f=>f.name.includes(q)).map(f=>`
+    <div class="food-item">
+      <div><b>${f.name}</b><div class="tiny">${f.kcal} کالری</div></div>
+      <button class="btn" style="width:auto;padding:8px 12px" onclick='addMeal([${JSON.stringify(f)}])'>＋</button>
+    </div>`).join('');
+}
+
+function renderProgress(){
+  const u=state.user;
+  const last = state.weights[state.weights.length-1]?.kg || u.weight;
+  const diff = (last - u.weight).toFixed(1);
+  document.getElementById('progress').innerHTML = `
+    <h2>پیشرفت</h2>
+    <div class="card">
+      <div class="progress-num">${last} کیلو</div>
+      <p class="muted">تغییر از شروع: ${diff} کیلو</p>
+      <label>وزن جدید</label>
+      <input type="number" id="w-new" value="${last}" />
+      <button class="btn" onclick="addWeight()">ثبت وزن</button>
+    </div>
+    <div class="card">
+      <h3>تاریخچه</h3>
+      ${state.weights.slice().reverse().map(w=>`<div class="food-item"><span>${w.date}</span><b>${w.kg} کیلو</b></div>`).join('')}
+    </div>
+    <div class="card">
+      <h3>پایبندی امروز</h3>
+      <p class="muted">${todayLogs().length} مورد غذا ثبت شده · ${eaten().kcal} کالری</p>
+    </div>`;
+}
+async function addWeight(){
+  const kg=+document.getElementById('w-new').value;
+  state.weights.push({date:state.day, kg});
+  state.user.weight=kg;
+  if(apiOn && state.user?.id){
+    try{ await api("/api/progress/weight", {method:"POST", body:JSON.stringify({user_id:state.user.id, kg})}); }catch(e){}
+  }
+  save(); renderProgress(); renderDashboard();
+}
+
+function renderCoach(){
+  const msgs = state.chat.map(m=>`<div class="bubble ${m.from==='bot'?'bot':'me'}">${m.text}</div>`).join('');
+  document.getElementById('ai-coach').innerHTML = `
+    <h2>مربی هوشمند</h2>
+    <div class="card chat" id="chatbox">${msgs}</div>
+    <input id="q" placeholder="مثلاً شام چی بخورم؟" onkeydown="if(event.key==='Enter')ask()" />
+    <button class="btn" onclick="ask()">ارسال</button>
+    <p class="tiny" style="margin-top:8px">پاسخ‌ها روی دستگاه و بر اساس پروفایل شما ساخته می‌شوند.</p>`;
+}
+async function ask(){
+  const q=document.getElementById('q').value.trim(); if(!q) return;
+  state.chat.push({from:'me', text:q});
+  if(apiOn && state.user?.id){
+    try{
+      const res = await api("/api/coach", {method:"POST", body:JSON.stringify({user_id:state.user.id, message:q})});
+      state.chat = res.chat; save(); renderCoach(); return;
+    }catch(e){}
+  }
+  const u=state.user, t=macros(tdee(u)), left=t.kcal-eaten().kcal;
+  let a='بر اساس هدفت ';
+  if(q.includes('شام')) a=`برای شام حدود ${Math.max(250,Math.round(left*0.35))} کالری بگذار. پیشنهاد: ماهی + سبزی. پروتئین بالا و سبک است.`;
+  else if(q.includes('گرسن')) a='یک میان‌وعده پروتئینی مثل ماست یونانی یا چند عدد مغز انتخاب کن تا گرسنگی کنترل شود.';
+  else if(q.includes('ورزش')) a=`با فعالیت ${u.activity}، کالری هدف ${t.kcal} است. بعد تمرین کربوهیدرات و پروتئین را با هم بگیر.`;
+  else if(q.includes('وزن')) a=`وزن فعلی ${u.weight} کیلو و هدف «${u.goal}» است. روند را هفتگی بسنج، نه روزانه.`;
+  else a=`کالری باقی‌مانده امروز حدود ${left} است. پروتئین هدف ${t.p} گرم. اگر از برنامه منحرف شدی سهم شام را کوچک‌تر کن، کل روز را رها نکن.`;
+  state.chat.push({from:'bot', text:a}); save(); renderCoach();
+}
+
+function renderProfile(){
+  const u=state.user;
+  document.getElementById('profile').innerHTML = `
+    <h2>پروفایل</h2>
+    <div class="card">
+      <p><b>${u.name}</b></p>
+      <p class="muted">${u.sex} · ${u.age} ساله · ${u.height} سانتی‌متر</p>
+      <p class="muted">فعالیت: ${u.activity} · هدف: ${u.goal}</p>
+      <p class="muted">کالری هدف: ${tdee(u)}</p>
+      <button class="btn ghost" onclick="resetApp()">شروع دوباره آنبوردینگ</button>
+    </div>`;
+}
+function resetApp(){ localStorage.removeItem('ravin'); location.reload(); }
+
+document.querySelectorAll('.tabbar button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+renderOnboarding();
+</script>
+</body>
+</html>
